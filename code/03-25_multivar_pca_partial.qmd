@@ -238,7 +238,7 @@ weather %>%
              y = sum_prcp.mm_Oct)) +
   geom_point() +
   geom_smooth(method="lm") #+
-  #stat_correlation()
+  stat_correlation()
 ```
 
 Two correlated variables:
@@ -313,9 +313,9 @@ lm_dayl.apr %>%
   ggplot(aes(x=mod)) +
   geom_pointrange(aes(y = estimate,
                       ymin = estimate - std.error,
-                      ymax = estimate - std.error
+                      ymax = estimate + std.error
                       )) +
-  facet_wrap(~term, scales = "free_y") +
+  facet_wrap(~ term, scales = "free_y") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2))
 
 ```
@@ -487,7 +487,9 @@ The longer is the eigenvector for a given variable, the more important it is tow
 Let's plot PC1 vs PC2 scores, look for any groupings.  
 
 ```{r PC1 vs PC2}
-fviz_pca_
+fviz_pca_ind(mod_pca,
+             label = F
+             )
 ```
   
 Appears that some groups exist.  
@@ -518,7 +520,9 @@ weather_postpca <- weather %>%
 
 # Regression of yield ~ PCs
 
-lm_pca <- lm(strength_gtex ~ PC1 + PC2 + PC3 + PC4)
+lm_pca <- lm(strength_gtex ~ PC1 + PC2 + PC3 + PC4,
+             data = weather_postpca
+             )
 
 # Summary  
 summary(lm_pca)
@@ -533,7 +537,12 @@ vif(lm_pca)
 
 ```{r pca regression plots}
 # Plotting strength vs PC1
-
+ggplot(weather_postpca,
+       aes(x = PC1,
+           y = strength_gtex
+           )) +
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
 

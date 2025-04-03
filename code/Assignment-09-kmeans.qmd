@@ -57,6 +57,15 @@ weather <- read_csv("../../09_opendata/data/weather_monthsum.csv")
 weather
 ```
 
+Since k-means only take numerical variables, let's select them now.  
+```{r selecting only numerical vars}
+weather_n <- weather %>%
+  dplyr::select(-c(year:strength_gtex))
+
+weather_n
+```
+
+
 k-means does not normalize our data for us like PCA did, so we will need to do that before running the model. Therefore, the in the following chunk, I normalize our data.
 
 ```{r}
